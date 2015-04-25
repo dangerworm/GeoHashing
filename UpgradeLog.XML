@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="GeoHashing">
+</Property><Property Name="Solution File" Value="C:\Users\Drew\Documents\Dropbox\Programming Projects\C#\GeoHashing\GeoHashing.sln">
+</Property><Property Name="User Options File" Value="C:\Users\Drew\Documents\Dropbox\Programming Projects\C#\GeoHashing\GeoHashing.suo">
+</Property><Property Name="Date" Value="24 April 2012">
+</Property><Property Name="Time" Value="03:34">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="GeoHashing.sln" Description="File successfully backed up as C:\Users\Drew\Documents\Dropbox\Programming Projects\C#\GeoHashing\Backup\GeoHashing.sln">
+</Event><Event ErrorLevel="0" Project="" Source="GeoHashing.suo" Description="File successfully backed up as C:\Users\Drew\Documents\Dropbox\Programming Projects\C#\GeoHashing\Backup\GeoHashing.suo">
+</Event><Event ErrorLevel="0" Project="GeoHashing" Source="GeoHashing\GeoHashing.csproj" Description="Project file successfully backed up as C:\Users\Drew\Documents\Dropbox\Programming Projects\C#\GeoHashing\Backup\GeoHashing\GeoHashing.csproj">
+</Event><Event ErrorLevel="0" Project="GeoHashing" Source="GeoHashing\GeoHashing.csproj.user" Description="Project user file successfully backed up as C:\Users\Drew\Documents\Dropbox\Programming Projects\C#\GeoHashing\Backup\GeoHashing\GeoHashing.csproj.user">
+</Event><Event ErrorLevel="0" Project="GeoHashing" Source="GeoHashing\Main.cs" Description="File successfully backed up as C:\Users\Drew\Documents\Dropbox\Programming Projects\C#\GeoHashing\Backup\GeoHashing\Main.cs">
+</Event><Event ErrorLevel="0" Project="GeoHashing" Source="GeoHashing\Main.designer.cs" Description="File successfully backed up as C:\Users\Drew\Documents\Dropbox\Programming Projects\C#\GeoHashing\Backup\GeoHashing\Main.designer.cs">
+</Event><Event ErrorLevel="0" Project="GeoHashing" Source="GeoHashing\Program.cs" Description="File successfully backed up as C:\Users\Drew\Documents\Dropbox\Programming Projects\C#\GeoHashing\Backup\GeoHashing\Program.cs">
+</Event><Event ErrorLevel="0" Project="GeoHashing" Source="GeoHashing\GeoHashing_TemporaryKey.pfx" Description="File successfully backed up as C:\Users\Drew\Documents\Dropbox\Programming Projects\C#\GeoHashing\Backup\GeoHashing\GeoHashing_TemporaryKey.pfx">
+</Event><Event ErrorLevel="0" Project="GeoHashing" Source="GeoHashing\Main.resx" Description="File successfully backed up as C:\Users\Drew\Documents\Dropbox\Programming Projects\C#\GeoHashing\Backup\GeoHashing\Main.resx">
+</Event><Event ErrorLevel="0" Project="GeoHashing" Source="GeoHashing\GeoHashing.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="GeoHashing" Source="GeoHashing\GeoHashing.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="GeoHashing.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="GeoHashing.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="GeoHashing" Source="GeoHashing\GeoHashing.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>
