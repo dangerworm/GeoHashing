@@ -51,7 +51,6 @@
             this.Date.Name = "Date";
             this.Date.Size = new System.Drawing.Size(73, 20);
             this.Date.TabIndex = 2;
-            this.Date.TextChanged += new System.EventHandler(this.Date_TextChanged);
             // 
             // lblDate
             // 
@@ -68,7 +67,6 @@
             this.DOW.Name = "DOW";
             this.DOW.Size = new System.Drawing.Size(73, 20);
             this.DOW.TabIndex = 3;
-            this.DOW.TextChanged += new System.EventHandler(this.DOW_TextChanged);
             // 
             // lblDOW
             // 
@@ -149,7 +147,6 @@
             this.LocationN.Name = "LocationN";
             this.LocationN.Size = new System.Drawing.Size(99, 20);
             this.LocationN.TabIndex = 0;
-            this.LocationN.TextChanged += new System.EventHandler(this.LocationN_TextChanged);
             // 
             // LocationW
             // 
@@ -157,7 +154,6 @@
             this.LocationW.Name = "LocationW";
             this.LocationW.Size = new System.Drawing.Size(100, 20);
             this.LocationW.TabIndex = 1;
-            this.LocationW.TextChanged += new System.EventHandler(this.LocationW_TextChanged);
             // 
             // ViewMap
             // 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
@@ -8,21 +9,55 @@ namespace GeoHashing
 {
     public partial class Main : Form
     {
+        private const string DowUrl =
+            "http://newsvote.bbc.co.uk/1/shared/fds/hi/business/market_data/ticker/markets/2/default.stm";
+
+        public Main()
+        {
+            InitializeComponent();
+        }
+
+        private void Main_Load(object sender, EventArgs e)
+        {
+            Date.Text = DateTime.Today.ToShortDateString();
+            DOW.Text = GetBbcDjiOpening().ToString(CultureInfo.InvariantCulture);
+
+            LocationN.TextChanged += (oSender, eArgs) => BuildCode();
+            LocationW.TextChanged += (oSender, eArgs) => BuildCode();
+            Date.TextChanged += (oSender, eArgs) => BuildCode();
+            DOW.TextChanged += (oSender, eArgs) => BuildCode();
+
+            BuildCode();
+        }
+
+        private void ViewMap_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("chrome", 
+                "http://maps.google.co.uk/maps?q=" + CoordinatesN.Text + "," + CoordinatesW.Text);
+        }
+
         private void BuildCode()
         {
             Code.Text = "";
             try
             {
-                for (int i = 2; i >= 0; i--)
-                    Code.Text += Date.Text.Split("/".ToCharArray())[i] + "-";
+                var date = DateTime.MinValue;
+                var canParse = DateTime.TryParse(Date.Text, out date);
+                if (canParse)
+                {
+                    Code.Text += date.ToString("yyyy-MM-dd-");
+                }
+
                 Code.Text += DOW.Text;
 
                 MD5 md5 = new MD5CryptoServiceProvider();
-                byte[] data = md5.ComputeHash(Encoding.Default.GetBytes(Code.Text));
+                var data = md5.ComputeHash(Encoding.Default.GetBytes(Code.Text));
 
-                StringBuilder sBuilder = new StringBuilder();
-                for (int i = 0; i < data.Length; i++)
-                    sBuilder.Append(data[i].ToString("x2"));
+                var sBuilder = new StringBuilder();
+                foreach (var b in data)
+                {
+                    sBuilder.Append(b.ToString("x2"));
+                }
 
                 MD5.Text = sBuilder.ToString();
 
@@ -33,69 +68,45 @@ namespace GeoHashing
                 CoordinatesW.Text += ConvertToDecimal(MD5.Text.Substring(16, 16)).ToString().Substring(2);
             }
             catch
-            { }
+            {
+                // ignored
+            }
         }
 
-        private double ConvertToDecimal(string hex)
+        public double GetBbcDjiOpening()
         {
-            double total = 0;
-            int multiplier = 0;
-
-            for (int i = 0; i < 16; i++)
+            var code = string.Empty;
+            using (var client = new WebClient())
             {
-                string c = hex.ToLower().Substring(i, 1);
-                switch (c)
-                {
-                    case "a": multiplier = 10; break;
-                    case "b": multiplier = 11; break;
-                    case "c": multiplier = 12; break;
-                    case "d": multiplier = 13; break;
-                    case "e": multiplier = 14; break;
-                    case "f": multiplier = 15; break;
-                    default: multiplier = Convert.ToInt32(c); break;
-                }
-
-                total += multiplier * Math.Pow(16.0, -(i + 1));
+                code = client.DownloadString(DowUrl);
             }
 
-            return total;
-        }
+            var titleJs = code.Substring(code.IndexOf("document.title='Dow ", StringComparison.Ordinal));
+            var dowNumbers = titleJs.Substring(titleJs.IndexOf("Dow ", StringComparison.Ordinal) + 4);
+            var lastApostrophe = titleJs.IndexOf("'", StringComparison.Ordinal);
+            var dowValues = dowNumbers.Substring(0, lastApostrophe + 1)
+                .Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
-        public double GetBBCDJIOpening()
-        {
-            string code = (new UTF8Encoding()).GetString
-                (
-                    (new WebClient()).DownloadData("http://newsvote.bbc.co.uk/1/shared/fds/hi/business/market_data/ticker/markets/2/default.stm")
-                );
+            double dow = 0;
+            double gainLoss = 0;
+            var canParseDow = double.TryParse(dowValues[0], out dow);
+            var canParseGainLoss = double.TryParse(dowValues[1], out gainLoss);
 
-            string dowjones = code.Substring(code.IndexOf("Dow Jones"));
-            int pos1 = dowjones.IndexOf("<div class=\"stats\">") + 19;
-            int pos2 = pos1 + dowjones.Substring(pos1 + 1).IndexOf("<");
-            double current = Convert.ToDouble(dowjones.Substring(pos1, pos2 - pos1 + 1));
-
-            int end = dowjones.Substring(pos1).IndexOf("<div class=\"stats\">");
-            string snippet = dowjones.Substring(pos1, end);
-
-            double opening;
-            if (snippet.IndexOf("<DIV CLASS=\"statslo\">") > -1)
+            if (canParseDow && canParseGainLoss)
             {
-                pos1 = dowjones.IndexOf("<DIV CLASS=\"statslo\">") + 21;
-                pos2 = pos1 + dowjones.Substring(pos1 + 1).IndexOf("<");
-                double loss = Convert.ToDouble(dowjones.Substring(pos1, pos2 - pos1 + 1));
-                opening = current + loss;
+                return dow + gainLoss;
             }
-            else
+
+            if (canParseDow)
             {
-                pos1 = dowjones.IndexOf("<DIV CLASS=\"statshi\">") + 21;
-                pos2 = pos1 + dowjones.Substring(pos1 + 1).IndexOf("<");
-                double gain = Convert.ToDouble(dowjones.Substring(pos1, pos2 - pos1 + 1));
-                opening = current - gain;
+                return dow;
             }
-            return opening;
+
+            return 0;
         }
 
         /*
-         * Works, but I want to show a least some patriotism.
+         * Works, but I want to show at least some patriotism.
         public double GetCNNDJIOpening()
         {
             string code = (new UTF8Encoding()).GetString
@@ -113,42 +124,30 @@ namespace GeoHashing
         }
          * */
 
-        public Main()
+        private static double ConvertToDecimal(string hex)
         {
-            InitializeComponent();
+            double total = 0;
+
+            for (var i = 0; i < 16; i++)
+            {
+                var c = hex.ToLower().Substring(i, 1);
+                var multiplier = 0;
+                switch (c)
+                {
+                    case "a": multiplier = 10; break;
+                    case "b": multiplier = 11; break;
+                    case "c": multiplier = 12; break;
+                    case "d": multiplier = 13; break;
+                    case "e": multiplier = 14; break;
+                    case "f": multiplier = 15; break;
+                    default: multiplier = Convert.ToInt32(c); break;
+                }
+
+                total += multiplier * Math.Pow(16.0, -(i + 1));
+            }
+
+            return total;
         }
 
-        private void Main_Load(object sender, EventArgs e)
-        {
-            Date.Text = DateTime.Today.ToShortDateString();
-            //DOW.Text = GetBBCDJIOpening().ToString();
-            BuildCode();
-        }
-
-        private void LocationN_TextChanged(object sender, EventArgs e)
-        {
-            BuildCode();
-        }
-
-        private void LocationW_TextChanged(object sender, EventArgs e)
-        {
-            BuildCode();
-        }
-
-        private void Date_TextChanged(object sender, EventArgs e)
-        {
-            BuildCode();
-        }
-
-        private void DOW_TextChanged(object sender, EventArgs e)
-        {
-            BuildCode();
-        }
-
-        private void ViewMap_Click(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process.Start("chrome", "http://maps.google.co.uk/maps?q=" +
-                CoordinatesN.Text + "," + CoordinatesW.Text);
-        }
     }
 }
